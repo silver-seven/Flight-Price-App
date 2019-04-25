@@ -118,14 +118,21 @@ public class MainActivity extends AppCompatActivity {
         if(!debounce2)    // only one button press
         {
             debounce2 = true;
-            RequestPlace rdest = new RequestPlace();
-            rdest.setQuery(locationInput.getText().toString());
-            RequestPlace rsrc = new RequestPlace();
-            rsrc.setQuery(destinationInput.getText().toString());
 
-            String[] cIn= comboIn.getSelectedItem().toString().split(":");
-            String[] cOut = comboOut.getSelectedItem().toString().split(":");
-            BackgroundQuoteThread quote = new BackgroundQuoteThread(this, dataView, cIn[0], cOut[0], outBound.getText().toString(), inBound.getText().toString());
+            BackgroundQuoteThread quote;
+            if(comboOut != null && comboOut.getSelectedItem() !=null ) {
+                String[] cIn= comboIn.getSelectedItem().toString().split(":");
+                String[] cOut = comboOut.getSelectedItem().toString().split(":");
+                quote = new BackgroundQuoteThread(this, dataView, cIn[0], cOut[0], outBound.getText().toString(), inBound.getText().toString());
+            }
+            else
+            {
+                RequestPlace rdest = new RequestPlace();
+                rdest.setQuery(locationInput.getText().toString());
+                RequestPlace rsrc = new RequestPlace();
+                rsrc.setQuery(destinationInput.getText().toString());
+                quote = new BackgroundQuoteThread(this, dataView, rdest, rsrc, outBound.getText().toString(), inBound.getText().toString());
+            }
             quote.execute();
 
             debounce2 = false;

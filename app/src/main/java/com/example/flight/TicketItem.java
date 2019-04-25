@@ -28,5 +28,14 @@ public class TicketItem {
         public String getDest() {
             return dest;
         }
+
+
+    /*public int compareTo(TicketItem target) {
+        // Sort ascending
+        //int ret = this.id- target.id;
+        // Sort descending.
+        int ret = target.price - this.id;
+
+        return ret;*/
     }
 
