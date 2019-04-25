@@ -10,6 +10,17 @@ public class DataPlace {
     String cityId;
     String countryName;
 
+    public DataPlace()
+    {
+        placeId = 0;
+        iataCode = "";
+        name = "";
+        type = "";
+        skyCode = "";
+        cityName = "";
+        cityId = "";
+        countryName = "";
+    }
 
     public DataPlace(int placeId, String iataCode, String name, String type, String skyCode, String cityName, String cityId, String countryName)
     {
@@ -31,5 +42,10 @@ public class DataPlace {
             out = name;
         }
         return out;
+    }
+
+    public int getId()
+    {
+        return placeId;
     }
 }

@@ -1,12 +1,18 @@
 package com.example.flight;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -30,6 +36,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -45,21 +52,27 @@ public class MainActivity extends AppCompatActivity {
     TextInputEditText destinationInput;
     String msg;
     CalendarView calendar;
+    Spinner comboOut;
+    Spinner comboIn;
+    List<String> table;
     int boundId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //initialize components
         button = findViewById(R.id.button);
         dataView = findViewById(R.id.dataView);
         locationInput = findViewById(R.id.locationText);
         destinationInput = findViewById(R.id.destinationText);
         outBound = findViewById(R.id.dateOut);
         inBound = findViewById(R.id.dateIn);
-
+        comboOut = findViewById(R.id.comboOut);
+        comboIn = findViewById(R.id.comboIn);
         calendar = findViewById(R.id.calendarView);
-        calendar.setVisibility(View.INVISIBLE);
+       // calendar.setVisibility(View.INVISIBLE);
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
@@ -76,136 +89,82 @@ public class MainActivity extends AppCompatActivity {
                 {
                     inBound.setText(String.valueOf(date));
                 }
-                calendar.setVisibility(View.INVISIBLE);
+                calendar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0 ));
+               // calendar.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     Boolean debounce = false;
-    Boolean originRdy = false;
-    Boolean destRdy = false;
-    String originPMsg;
-    String destPMsg;
-    public void buttonHandler(View v){
+    public void buttonCheckHandler(View v){
 
         if(!debounce)    // only one button press
         {
             debounce = true;
             RequestPlace rdest = new RequestPlace();
-            rdest.setQuery(destinationInput.getText().toString());
+            rdest.setQuery(locationInput.getText().toString());
             RequestPlace rsrc = new RequestPlace();
-            rsrc.setQuery(locationInput.getText().toString());
+            rsrc.setQuery(destinationInput.getText().toString());
 
-            BackgroundQuoteThread quote = new BackgroundQuoteThread(this, dataView, rsrc, rdest, outBound.getText().toString(), inBound.getText().toString());
+            BackgroundPlaceThread quote = new BackgroundPlaceThread(this, dataView, rsrc, rdest);
             quote.execute();
 
             debounce = false;
         }
+    }
+    Boolean debounce2 = false;
+    public void buttonHandler(View v){
 
+        if(!debounce2)    // only one button press
+        {
+            debounce2 = true;
+            RequestPlace rdest = new RequestPlace();
+            rdest.setQuery(locationInput.getText().toString());
+            RequestPlace rsrc = new RequestPlace();
+            rsrc.setQuery(destinationInput.getText().toString());
 
+            String[] cIn= comboIn.getSelectedItem().toString().split(":");
+            String[] cOut = comboOut.getSelectedItem().toString().split(":");
+            BackgroundQuoteThread quote = new BackgroundQuoteThread(this, dataView, cIn[0], cOut[0], outBound.getText().toString(), inBound.getText().toString());
+            quote.execute();
 
+            debounce2 = false;
+        }
     }
 
     public void dateHandler(View v)
     {
         boundId = v.getId();
-        calendar.setVisibility(View.VISIBLE);
+        calendar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT ));
+        //calendar.setVisibility(View.VISIBLE);
     }
 
     public void setData(String m)
     {
-        JSONParser jp = new JSONParser();
+        JSONParser jp = new JSONParser(this);
         dataView.setText(jp.parsePlace(dataView.getText().toString()));
     }
 
-    public void sendRequest()
+    public void openDataActivity(DataQuote[] quoteList, String msg)
     {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        dataView.setText(response);
-                    }
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                dataView.setText("That didn't work!");
-            }
-
-        }) //close param
-        {   //body
-
-            @Override
-            public Map getHeaders() throws AuthFailureError {
-                HashMap headers = new HashMap();
-                headers.put("Content-Type", "application/json");
-                headers.put("X-RapidAPI-Key", "c586b06cbemsh55b180d6b7855d9p123a23jsn12353804c762");
-                return headers;
-            }
-        };
-        queue.add(stringRequest);
-
-
-
+        Intent data = new Intent(this, DataActivity.class);
+        data.putExtra("quotes", msg);
+        startActivity(data);
     }
-}
 
+    public void setComboBox(List<String> list, int combo)
+    {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, R.layout.spinner_items, list);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-        public void buttonHandler(View v) throws IOException {
-
-
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText(response);
-                    }
-
-                }, new Response.ErrorListener() {
-
-            public void onErrorResponse(VolleyError error) {
-                textView.setText("That didn't work!");
-            }
-
-        }) //close param
-        {   //body
-
-
-            public Map getHeaders() throws AuthFailureError {
-                HashMap headers = new HashMap();
-                headers.put("Content-Type", "application/json");
-                headers.put("X-RapidAPI-Key", "c586b06cbemsh55b180d6b7855d9p123a23jsn12353804c762");
-                return headers;
-            }
-        };
-        queue.add(stringRequest);
-
-
+        adapter.setDropDownViewResource(R.layout.spinner_items);
+        Spinner items;
+        if(combo == 1)
+            items = comboOut;
+        else
+            items = comboIn;
+        items.setAdapter(adapter);
     }
+
+
 }
-*/

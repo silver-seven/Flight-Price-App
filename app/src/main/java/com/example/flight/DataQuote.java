@@ -49,21 +49,39 @@ public class DataQuote {
     {
         for(int i=0; i<places.length; i++)
         {
-            String temp = places[i].getNameFromPlaceID(originId);
-            if(temp != "NONE")
+            DataPlace place = places[i];
+            if(places[i] != null) {
+                String temp = places[i].getNameFromPlaceID(originId);
+                if (temp != "NONE") {
+                    origin = temp;
+                    break;
+                }
+                else
+                {
+                    origin = "NONE";
+                }
+            }
+            else
             {
-                origin = temp;
-                break;
+                dest = "NONE";
             }
         }
         for(int i=0; i<places.length; i++)
         {
-
-            String temp = places[i].getNameFromPlaceID(destId);
-            if(temp != "NONE")
+            if(places[i] != null) {
+                String temp = places[i].getNameFromPlaceID(destId);
+                if (temp != "NONE") {
+                    dest = temp;
+                    break;
+                }
+                else
+                {
+                    dest = "NONE";
+                }
+            }
+            else
             {
-                dest = temp;
-                break;
+                dest = "NONE";
             }
         }
     }
@@ -79,5 +97,29 @@ public class DataQuote {
                 break;
             }
         }
+    }
+
+    public String getCarrier()
+    {
+        return carrier;
+    }
+
+    public String getOrigin()
+    {
+        if(origin.isEmpty())
+            return "error";
+        return origin;
+    }
+
+    public String getDest()
+    {
+        if(dest.isEmpty())
+            return "error";
+        return dest;
+    }
+
+    public float getMinPrice()
+    {
+        return minPrice;
     }
 }

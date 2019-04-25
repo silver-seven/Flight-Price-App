@@ -19,7 +19,7 @@ public class RequestQuote {
         country = "US";
         currency = "USD";
         local = "en-US";
-        url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseruotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01";
+        url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01";
     }
 
     public RequestQuote(String outDate, String inDate, String outPort, String inPort)
@@ -31,7 +31,7 @@ public class RequestQuote {
         this.inDate = inDate;
         this.outPort = outPort;
         this.inPort = inPort;
-        this.url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseruotes/v1.0/"
+        this.url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/"
                 + country + "/"
                 + currency + "/"
                 + local + "/"

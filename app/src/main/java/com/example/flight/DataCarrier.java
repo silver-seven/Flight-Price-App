@@ -4,6 +4,11 @@ public class DataCarrier {
     int carrierId;
     String carrierName;
 
+    public DataCarrier()
+    {
+        carrierId = 0;
+        carrierName = "";
+    }
     public DataCarrier(int carrierId, String carrierName)
     {
         this.carrierId = carrierId;

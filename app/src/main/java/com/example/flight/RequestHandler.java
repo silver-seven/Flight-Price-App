@@ -29,7 +29,7 @@ public class RequestHandler {
         text = v;
         mainAct = m;
         this.key = key;
-        link = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01";
+        link = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01";
     }
 
     public RequestHandler(MainActivity m, String v)
@@ -37,17 +37,18 @@ public class RequestHandler {
         msg = v;
         mainAct = m;
         this.key = key;
-        link = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01";
+        link = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01";
     }
 
     public void sendPlace(RequestPlace place)
     {
         link = place.getUrl();
-        sendRequest("s");
+        sendRequest(link);
     }
 
     public void sendRequest(String http)
     {
+        link = http;
         RequestQueue queue = Volley.newRequestQueue(mainAct);
         String url = link;
         msg = null;
@@ -76,7 +77,7 @@ public class RequestHandler {
                 HashMap headers = new HashMap();
                 headers.put("Content-Type", "application/json");
                 headers.put("X-RapidAPI-Host", "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com");
-                headers.put("X-RapidAPI-Key", "");
+                headers.put("X-RapidAPI-Key", "c586b06cbemsh55b180d6b7855d9p123a23jsn12353804c762");
                 return headers;
             }
         };
@@ -90,6 +91,8 @@ public class RequestHandler {
 
     public String getMsg()
     {
+        if(msg.isEmpty())
+            return "error";
         return msg;
     }
 

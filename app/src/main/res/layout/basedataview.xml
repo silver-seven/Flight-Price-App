@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/airlineDV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:gravity="center"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/originDV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:gravity="center"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/destDV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:gravity="center"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/priceDV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="25"
+        android:gravity="center"
+        android:text="TextView" />
+</LinearLayout>
